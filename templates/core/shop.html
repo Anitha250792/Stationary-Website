@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="bg-[#D3DFF8] min-h-screen font-['Roboto']">
+
+  <!-- Hero Section -->
+  <div class="container mx-auto text-center py-6">
+    <img src="{% static 'images/shop-home.png' %}" alt="Shop Banner" class="rounded-lg shadow-md w-full h-78 object-cover">
+    <h2 class="mt-4 text-xl md:text-2xl font-bold text-gray-800">
+      "Where Ideas Begin – Shop Smart, Stay Sharp!"
+    </h2>
+  </div>
+
+  <!-- Main Layout -->
+  <div class="container mx-auto px-4 md:flex md:space-x-6">
+
+    <!-- Sidebar -->
+    <aside class="w-full md:w-1/5 bg-white p-4 rounded-lg shadow mb-6 md:mb-0">
+      <h3 class="font-bold text-lg mb-4">Categories</h3>
+      <ul class="space-y-2">
+        {% for cat in categories %}
+          <li>
+            <a href="{% url 'shop_by_category' cat.slug %}" 
+               class="flex items-center gap-2 px-3 py-2 rounded hover:bg-[#7AABF5] hover:text-white {% if category and category.slug == cat.slug %} bg-[#097AFA] text-white {% endif %}">
+              <i class="bi bi-folder"></i> {{ cat.name }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </aside>
+
+    <!-- Products Section -->
+    <main class="w-full md:w-4/5">
+
+      <!-- Search Bar -->
+      <form method="get" class="mb-6 flex items-center justify-center md:justify-start">
+        <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Search for Stationery..."
+          class="w-2/3 md:w-1/2 px-4 py-2 rounded-l-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#097AFA]">
+        <button type="submit" class="bg-[#097AFA] text-white px-4 py-2 rounded-r-lg hover:bg-blue-700">
+          Search
+        </button>
+      </form>
+
+      <!-- Product Grid -->
+      <h3 class="text-xl font-bold mb-4 text-center md:text-left">
+        {% if category %} {{ category.name }} {% else %} All Products {% endif %}
+      </h3>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-20">
+        {% for product in products %}
+          <div class="bg-[#7AABF5] text-center rounded-2xl shadow-lg hover:shadow-xl transition">
+            
+            <!-- Product Image -->
+            <img src="{{ product.image.url }}" alt="{{ product.title }}" class="h-40 w-full mb-3 rounded">
+            
+            <!-- Product Title -->
+            <h4 class="font-bold text-white">{{ product.title }}</h4>
+            
+<!-- Rating Section -->
+<div class="flex items-center justify-center mt-1 space-x-0.5">
+  {% with rating=product.rating|default:0 %}
+    {% for i in "12345" %}
+      {% if forloop.counter <= rating|floatformat:0 %}
+        <!-- Filled Yellow Star -->
+        <svg class="w-4 h-4" fill="#FACC15" viewBox="0 0 20 20">
+          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.974a1 1 0 0 0 .95.69h4.18c.969 0 1.371 1.24.588 1.81l-3.386 2.46a1 1 0 0 0-.364 1.118l1.287 3.974c.3.921-.755 1.688-1.538 1.118l-3.386-2.46a1 1 0 0 0-1.176 0l-3.386 2.46c-.783.57-1.838-.197-1.538-1.118l1.287-3.974a1 1 0 0 0-.364-1.118L2.045 9.4c-.783-.57-.38-1.81.588-1.81h4.18a1 1 0 0 0 .95-.69l1.286-3.974z"/>
+        </svg>
+      {% else %}
+        <!-- Empty Gray Star -->
+        <svg class="w-4 h-4" fill="#D1D5DB" viewBox="0 0 20 20">
+          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.974a1 1 0 0 0 .95.69h4.18c.969 0 1.371 1.24.588 1.81l-3.386 2.46a1 1 0 0 0-.364 1.118l1.287 3.974c.3.921-.755 1.688-1.538 1.118l-3.386-2.46a1 1 0 0 0-1.176 0l-3.386 2.46c-.783.57-1.838-.197-1.538-1.118l1.287-3.974a1 1 0 0 0-.364-1.118L2.045 9.4c-.783-.57-.38-1.81.588-1.81h4.18a1 1 0 0 0 .95-.69l1.286-3.974z"/>
+        </svg>
+      {% endif %}
+    {% endfor %}
+  {% endwith %}
+  <span class="ml-1 text-black text-xs">({{ product.rating|default:"0" }})</span>
+</div>
+
+
+            
+            <!-- Price Section -->
+            <p class="text-black fw-bold mt-2">
+              {% if product.discount_price %}
+                <span class="line-through text-gray-200">Rs. {{ product.price }}</span>
+                <span class="font-bold text-yellow-300 ml-2">Rs. {{ product.discount_price }}</span>
+              {% else %}
+                Rs. {{ product.price }}
+              {% endif %}
+            </p>
+            
+            <!-- Bulk Offer Text -->
+            {% if product.bulk_offer_text %}
+              <p class="text-sm fw-bold text-black mt-1">{{ product.bulk_offer_text }}</p>
+            {% endif %}
+            
+            <!-- Add to Cart Form -->
+            <form method="POST" action="{% url 'cart_update' product.id %}">
+              {% csrf_token %}
+              <div class="flex justify-center m-4">
+                <button type="submit"
+                        class="w-40 flex items-center justify-center gap-2 bg-[#097AFA] text-white px-4 py-2 rounded-2xl hover:bg-blue-700 transition-colors duration-300">
+                  Add to Cart
+                </button>
+              </div>
+            </form>
+            
+          </div>
+        {% empty %}
+          <p class="col-span-3 text-center text-gray-600 bg-white py-6 rounded-lg shadow">
+            No products found. Try a different search or category.
+          </p>
+        {% endfor %}
+      </div>
+
+      <!-- Pagination -->
+      {% if products.has_other_pages %}
+      <div class="flex flex-wrap justify-center mt-8 gap-2">
+        {% if products.has_previous %}
+          <a href="?{% if query %}q={{ query }}&{% endif %}page={{ products.previous_page_number }}" 
+             class="px-3 py-2 bg-white border rounded hover:bg-[#097AFA] hover:text-white">Prev</a>
+        {% endif %}
+
+        {% for i in products.paginator.page_range %}
+          {% if products.number == i %}
+            <span class="px-3 py-2 bg-[#097AFA] text-white rounded">{{ i }}</span>
+          {% else %}
+            <a href="?{% if query %}q={{ query }}&{% endif %}page={{ i }}" 
+               class="px-3 py-2 bg-white border rounded hover:bg-[#097AFA] hover:text-white">{{ i }}</a>
+          {% endif %}
+        {% endfor %}
+
+        {% if products.has_next %}
+          <a href="?{% if query %}q={{ query }}&{% endif %}page={{ products.next_page_number }}" 
+             class="px-3 py-2 bg-white border rounded hover:bg-[#097AFA] hover:text-white">Next</a>
+        {% endif %}
+      </div>
+      {% endif %}
+
+    </main>
+  </div>
+</div>
+{% endblock %}
