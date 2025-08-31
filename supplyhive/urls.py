@@ -13,7 +13,7 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('aboutus/', views.aboutus, name='aboutus'),
     path('contact/', views.contact, name='contact'),
-    path('signin/', views.signin, name='signin'),
+
 
     # Shop
     path("shop/", views.shop, name="shop"),
@@ -25,8 +25,10 @@ urlpatterns = [
     path('cart/remove/<int:product_id>/', views.cart_remove, name='cart_remove'),
 
     # Billing & Checkout
+    path("signin/", views.signin, name="signin"),
     path("billing/", views.billing_detail, name="billing_detail"),
     path("checkout/", views.checkout, name="checkout"),
+
 
     # Orders
     path("my-orders/", views.my_orders, name="my_orders"),

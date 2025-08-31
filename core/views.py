@@ -20,8 +20,26 @@ def aboutus(request):
 def contact(request):
         return render(request, "core/contact.html")
 
+from django.contrib.auth import authenticate, login
+from django.shortcuts import render, redirect
+
 def signin(request):
-        return render(request, "core/signin.html")
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            next_url = request.GET.get("next") or "billing_detail"
+            return redirect(next_url)
+        else:
+            return render(request, "core/signin.html", {"error": "Invalid credentials"})
+
+    
+    return render(request, "core/signin.html")
+
+
 
 def shop(request, slug=None):
         category = None
@@ -89,15 +107,13 @@ def cart_remove(request, product_id):
 
     # ---------------- BILLING / CHECKOUT ---------------- #
 
+from django.contrib.auth.decorators import login_required
+
 @login_required
 def billing_detail(request):
     cart = Cart(request)
     total_price = sum(item['total_price'] for item in cart)
-    return render(request, "core/billing_detail.html", {
-        "cart": cart,
-        "total_price": total_price
-    })
-
+    return render(request, "core/billing_detail.html", {"cart": cart, "total_price": total_price})
 
 
 from decimal import Decimal

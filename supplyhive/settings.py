@@ -75,6 +75,10 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-LOGIN_URL = '/signin/'
+LOGIN_URL = "signin"
+LOGIN_REDIRECT_URL = "billing_detail"
+
+
+
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
