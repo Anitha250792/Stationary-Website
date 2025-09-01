@@ -1,6 +1,8 @@
-# shop/models.py
 from django.db import models
 from django.contrib.auth.models import User
+from django.urls import reverse
+from django.utils.text import slugify
+
 
 
 class Category(models.Model):
@@ -13,16 +15,20 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return reverse("shop:shop_by_category", args=[self.slug])
+
 
 class Product(models.Model):
     category = models.ForeignKey(
         Category,
         related_name="products",
         on_delete=models.CASCADE,
-        null=True,  # allow null for safe migration
+        null=True,
         blank=True,
     )
     title = models.CharField(max_length=150, blank=True, null=True)
+    slug = models.SlugField(unique=True, blank=True, null=True)  # ✅ Added slug
     description = models.TextField(blank=True, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, help_text="Selling price", blank=True, null=True)
     mrp = models.DecimalField(max_digits=10, decimal_places=2, help_text="Original price", null=True, blank=True)
@@ -41,8 +47,19 @@ class Product(models.Model):
     def __str__(self):
         return self.title or f"Product #{self.pk}"
 
+    def get_absolute_url(self):
+        """Return the product detail URL."""
+        return reverse("shop:product_detail", args=[self.slug])
 
-# shop/models.py
+    def get_display_price(self):
+        """Return the price after discount (if any)."""
+        return self.discount_price or self.price
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
+
+
 class Order(models.Model):
     STATUS_CHOICES = [
         ("Placed", "Placed"),
@@ -56,7 +73,6 @@ class Order(models.Model):
     updated = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="Placed")
 
-    # New fields - make them optional
     fullname = models.CharField(max_length=200, blank=True, null=True)
     phone = models.CharField(max_length=15, blank=True, null=True)
     address = models.TextField(blank=True, null=True)
@@ -69,7 +85,6 @@ class Order(models.Model):
 
     def get_total_cost(self):
         return sum(item.get_total_price() for item in self.items.all())
-
 
 
 class OrderItem(models.Model):

@@ -45,6 +45,7 @@ def shop(request, slug=None):
         category = None
         categories = Category.objects.all()
         products = Product.objects.all()
+        price_filter = request.GET.get('price')
 
         # Category filter
         if slug:
@@ -55,7 +56,10 @@ def shop(request, slug=None):
         query = request.GET.get("q")
         if query:
             products = products.filter(title__icontains=query)
-
+         # Price filter
+        if price_filter:
+            min_price, max_price = map(int, price_filter.split('-'))
+            products = products.filter(price__gte=min_price, price__lte=max_price)
         # Pagination
         paginator = Paginator(products, 9)
         page_number = request.GET.get("page")
@@ -67,6 +71,43 @@ def shop(request, slug=None):
             "category": category,
             "query": query,
         })
+# ---------------- PRODUCT DETAIL ---------------- #
+
+from django.shortcuts import render, get_object_or_404
+from .models import Product
+
+def product_detail(request, slug):
+    """Single product detail page"""
+    product = get_object_or_404(Product, slug=slug)
+
+    # Related products from the same category (exclude current)
+    related_products = Product.objects.filter(
+        category=product.category
+    ).exclude(id=product.id)[:4]
+
+    return render(request, "core/product_detail.html", {
+        "product": product,
+        "related_products": related_products,
+    })
+from django.shortcuts import get_object_or_404, redirect
+from core.models import Product
+
+from core.models import Product, Order, OrderItem
+from core.cart import Cart
+
+
+def buy_now(request, product_id):
+    """Direct checkout for one product"""
+    product = get_object_or_404(Product, id=product_id)
+    quantity = int(request.POST.get("quantity", 1))
+
+    cart = Cart(request)
+    cart.clear()
+    cart.add(product=product, quantity=quantity)
+
+    return redirect("checkout")
+
+
 
     # ---------------- CART ---------------- #
 
