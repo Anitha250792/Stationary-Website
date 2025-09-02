@@ -63,16 +63,19 @@
         <div class="mt-2">
           <div class="font-medium text-sm">{{ product.title }}</div>
           <!-- Rating -->
-          <div class="flex items-center justify-center mt-1">
-            {% for i in "12345" %}
-              {% if forloop.counter <= product.rating|default:0|floatformat:0 %}
-                <span class="text-yellow-500 text-xs">★</span>
+          <div class="flex items-center justify-center mt-1 space-x-0.5">
+  {% with rating=product.rating|default:0 %}
+    {% for i in "12345" %}
+      {% if forloop.counter <= rating|floatformat:0 %}
+    <span class="text-amber-500 text-2xl">★</span>
               {% else %}
-                <span class="text-gray-300 text-xs">★</span>
-              {% endif %}
-            {% endfor %}
-            <span class="ml-1 text-black text-xs">({{ product.rating|default:0 }})</span>
-          </div>
+                 <span class="text-amber-300 text-2xl">★</span>
+     
+      {% endif %}
+    {% endfor %}
+  {% endwith %}
+  <span class="ml-1 text-black text-xs">({{ product.rating|default:"0" }})</span>
+</div>
           <!-- Price -->
           <div class="mt-1 font-bold text-sm">
             {% if product.discount_price %}
@@ -122,16 +125,19 @@
         <div class="mt-2">
           <div class="font-medium text-sm">{{ product.title }}</div>
           <!-- Rating -->
-          <div class="flex items-center justify-center mt-1">
-            {% for i in "12345" %}
-              {% if forloop.counter <= product.rating|floatformat:0 %}
-                <span class="text-yellow-500 text-xs">★</span>
+          <div class="flex items-center justify-center mt-1 space-x-0.5">
+  {% with rating=product.rating|default:0 %}
+    {% for i in "12345" %}
+      {% if forloop.counter <= rating|floatformat:0 %}
+   <span class="text-amber-500 text-2xl">★</span>
               {% else %}
-                <span class="text-gray-300 text-xs">★</span>
-              {% endif %}
-            {% endfor %}
-            <span class="ml-1 text-black text-xs">({{ product.rating}})</span>
-          </div>
+               <span class="text-amber-300 text-2xl">★</span>
+     
+      {% endif %}
+    {% endfor %}
+  {% endwith %}
+  <span class="ml-1 text-black text-xs">({{ product.rating|default:"0" }})</span>
+</div>
           <!-- Price -->
           <div class="mt-1 font-bold text-sm">
             {% if product.discount_price %}
