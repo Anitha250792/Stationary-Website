@@ -5,7 +5,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'dev-secret-key-change-in-prod'
 DEBUG = True
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'stationary-website-2.onrender.com']
+ALLOWED_HOSTS = ["stationary-website-9src.onrender.com", "localhost", "127.0.0.1"]
 
 
 INSTALLED_APPS = [
