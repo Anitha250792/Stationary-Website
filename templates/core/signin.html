@@ -5,7 +5,8 @@
 <div class="bg-[#D3DFF8] min-h-screen py-10 font-['Roboto']">
   <!-- Hero Section -->
   <div class="container mx-auto text-center py-6">
-    <img src="{% static 'images/bill.png' %}" alt="Shop Banner" class="rounded-lg shadow-md w-full h-78 object-cover">
+    <img src="{% static 'images/bill.png' %}" alt="Shop Banner" 
+         class="rounded-lg shadow-md w-full h-72 object-cover">
     <h2 class="mt-4 text-xl md:text-2xl font-bold text-gray-800">
       "Where Ideas Begin – Shop Smart, Stay Sharp!"
     </h2>
@@ -18,7 +19,8 @@
       <p class="text-red-600 text-center mb-4">{{ error }}</p>
     {% endif %}
 
-    <form id="signinForm" method="POST" action="{% url 'signin' %}" class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-2xl mx-auto">
+    <form id="signinForm" method="POST" action="{% url 'signin' %}" 
+          class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-2xl mx-auto">
       {% csrf_token %}
 
       <!-- Email / Username -->
@@ -44,7 +46,7 @@
         <p id="passwordError" class="text-red-500 text-sm mt-1 hidden"></p>
       </div>
 
-      <!-- Optional Phone & OTP (design only) -->
+      <!-- Optional Phone & OTP (UI only) -->
       <div>
         <label class="block font-semibold mb-1">Phone Number</label>
         <input type="text" placeholder="Enter your Number"
@@ -67,6 +69,17 @@
         </button>
       </div>
     </form>
+
+    <!-- Signup Redirect -->
+    <div class="text-center mt-6">
+      <p class="text-gray-700">
+        Don’t have an account?
+        <a href="{% url 'register' %}" 
+           class="text-[#097AFA] font-semibold hover:underline">
+          Signup here
+        </a>
+      </p>
+    </div>
   </div>
 </div>
 
@@ -91,7 +104,6 @@ document.addEventListener("DOMContentLoaded", function() {
   form.addEventListener("submit", function(e) {
     let valid = true;
 
-    // Username validation
     if (!username.value.trim()) {
       usernameError.textContent = "Email or Username is required.";
       usernameError.classList.remove("hidden");
@@ -101,7 +113,6 @@ document.addEventListener("DOMContentLoaded", function() {
       usernameError.classList.add("hidden");
     }
 
-    // Password validation
     if (!password.value.trim()) {
       passwordError.textContent = "Password is required.";
       passwordError.classList.remove("hidden");
@@ -111,7 +122,7 @@ document.addEventListener("DOMContentLoaded", function() {
       passwordError.classList.add("hidden");
     }
 
-    if (!valid) e.preventDefault(); // Prevent submission if invalid
+    if (!valid) e.preventDefault();
   });
 });
 </script>

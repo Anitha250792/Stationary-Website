@@ -28,6 +28,7 @@ urlpatterns = [
     path("buy-now/<int:product_id>/", views.buy_now, name="buy_now"),
 
     path("signin/", views.signin, name="signin"),
+      path("register/", views.register, name="register"),  
     path("billing/", views.billing_detail, name="billing_detail"),
     path("checkout/", views.checkout, name="checkout"),
 

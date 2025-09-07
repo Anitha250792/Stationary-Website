@@ -1,6 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.contrib.auth import login
+from django.contrib import messages
+
 from .models import Category, Product, Order, OrderItem
 from core.cart import Cart
 
@@ -39,6 +43,41 @@ def signin(request):
     
     return render(request, "core/signin.html")
 
+
+def register(request):
+    if request.method == "POST":
+        username = request.POST.get("username")
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+        confirm_password = request.POST.get("confirmPassword")
+
+        # Check if passwords match
+        if password != confirm_password:
+            messages.error(request, "Passwords do not match.")
+            return redirect("register")
+
+        # Check if username already exists
+        if User.objects.filter(username=username).exists():
+            messages.error(request, "Username already taken.")
+            return redirect("register")
+
+        # Check if email already exists
+        if User.objects.filter(email=email).exists():
+            messages.error(request, "Email already registered.")
+            return redirect("register")
+
+        # Create user
+        user = User.objects.create_user(username=username, email=email, password=password)
+        user.save()
+
+        # Authenticate and login the user automatically
+        new_user = authenticate(request, username=username, password=password)
+        if new_user is not None:
+            login(request, new_user)
+            messages.success(request, f"Welcome {username}, your account has been created!")
+            return redirect("home")  # 👈 redirect to homepage (or cart/dashboard)
+
+    return render(request, "core/register.html")   # if inside core/templates/core/
 
 
 def shop(request, slug=None):

@@ -4,15 +4,26 @@
 <main style="background-color: #D3DFF8">
 
   <!-- Hero Section -->
-  <section class="container mx-auto px-4 py-8 md:py-12">
-    <div class="grid md:grid-cols-3 items-end gap-0">
-      <img src="{% static 'images/1.png' %}" alt="" class="rounded-2xl w-full h-52 object-cover relative top-6 shadow-md">
-      <div class="rounded-2xl h-72 w-full bg-[url('{% static "images/2.png" %}')] bg-cover bg-center grid place-items-center relative top-0">
-        <div></div>
-      </div>
-      <img src="{% static 'images/3.png' %}" alt="" class="rounded-2xl w-full h-52 object-cover relative -top-6 shadow-md">
+<section class="container mx-auto px-4 py-8 md:py-12">
+  <div class="grid md:grid-cols-3 gap-4 items-center">
+    
+    <!-- Left Image -->
+    <div class="flex justify-center">
+      <img src="{% static 'images/1.png' %}" alt="" class="rounded-2xl w-full max-w-sm h-64 md:h-72 object-cover shadow-md">
     </div>
-  </section>
+    
+    <!-- Center Banner -->
+    <div class="rounded-2xl h-72 w-full bg-[url('{% static "images/2.png" %}')] bg-cover bg-center flex items-center justify-center shadow-md">
+      <div><!-- Optional content here --></div>
+    </div>
+    
+    <!-- Right Image -->
+    <div class="flex justify-center">
+      <img src="{% static 'images/3.png' %}" alt="" class="rounded-2xl w-full max-w-sm h-64 md:h-72 object-cover shadow-md">
+    </div>
+    
+  </div>
+</section>
 
   <!-- Intro Text -->
   <section class="container mx-auto px-4 text-center m-8">
@@ -102,18 +113,22 @@
   </section>
 
   <!-- Trending Section -->
-  <section class="container mx-auto px-4 py-10">
-    <h3 class="text-2xl font-bold text-center mb-6">Trending</h3>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 justify-items-center">
-      {% for product in trending %}
-        <div class="rounded-3xl bg-white shadow hover:shadow-lg transition">
-          <img src="{{ product.image.url }}" alt="{{ product.title }}" class="rounded-xl w-full h-40 object-cover">
-        </div>
-      {% empty %}
-        <p class="col-span-full text-center text-slate-600">Mark items as trending in admin.</p>
-      {% endfor %}
-    </div>
-  </section>
+<section class="container mx-auto px-4 py-10">
+  <h3 class="text-2xl font-bold text-center mb-6">Trending</h3>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 justify-items-center">
+    {% for product in trending %}
+      <div class="rounded-3xl bg-white shadow hover:shadow-lg transition">
+        <img src="{{ product.image.url }}" alt="{{ product.title }}" 
+             class="rounded-xl w-full h-56 object-cover">  <!-- 👈 increased size -->
+      </div>
+    {% empty %}
+      <p class="col-span-full text-center text-slate-600">
+        Mark items as trending in admin.
+      </p>
+    {% endfor %}
+  </div>
+</section>
+
 
   <!-- Back to School Section -->
   <section class="container mx-auto px-4 py-10">
@@ -163,22 +178,35 @@
     </div>
   </section>
 
+  
   <!-- Team Section -->
-  <section class="container mx-auto px-4 py-6">
-    <h3 class="text-2xl font-bold text-center mb-6">The Team</h3>
-    <p class="text-center text-slate-700 max-w-3xl mx-auto mb-6">
-      Our team is a dedicated group of professionals passionate about delivering quality stationery in bulk with efficiency and care. With expertise in sourcing, logistics, and customer service, we ensure every order meets the highest standards.
-    </p>
-    <div class="grid sm:grid-cols-3 gap-6">
-      {% for i in "123" %}
-      <div class="rounded-2xl mb-2 text-center">
-        <img src="{% static 'images/team'|add:i|add:'.png' %}" class="rounded-xl w-full h-54 object-cover" alt="Team member {{ i }}">
-        <div class="mt-3 font-semibold">Seth Rollins</div>
-        <div class="text-sm mb-3 text-slate-600">Shop Owner</div>
-      </div>
-      {% endfor %}
+<section class="container mx-auto px-4 py-6">
+  <h3 class="text-2xl font-bold text-center mb-6">The Team</h3>
+  <p class="text-center text-slate-700 max-w-3xl mx-auto mb-6">
+    Our team is a dedicated group of professionals passionate about delivering quality stationery in bulk with efficiency and care. With expertise in sourcing, logistics, and customer service, we ensure every order meets the highest standards.
+  </p>
+  
+  <div class="grid sm:grid-cols-3 gap-6">
+    <div class="rounded-2xl mb-2 text-center">
+      <img src="{% static 'images/team1.png' %}" class="rounded-full w-60 h-60 object-cover mx-auto shadow-md" alt="Team member 1">
+      <div class="mt-3 font-semibold">Seth Rollins</div>
+      <div class="text-sm mb-3 text-slate-600">Shop Owner</div>
     </div>
-  </section>
+
+    <div class="rounded-2xl mb-2 text-center">
+      <img src="{% static 'images/team2.png' %}" class="rounded-full w-60 h-60 object-cover mx-auto shadow-md" alt="Team member 2">
+      <div class="mt-3 font-semibold">Becky Lynch</div>
+      <div class="text-sm mb-3 text-slate-600">Manager</div>
+    </div>
+
+    <div class="rounded-2xl mb-2 text-center">
+      <img src="{% static 'images/team3.png' %}" class="rounded-full w-60 h-60 object-cover mx-auto shadow-md" alt="Team member 3">
+      <div class="mt-3 font-semibold">Roman Reigns</div>
+      <div class="text-sm mb-3 text-slate-600">Logistics Head</div>
+    </div>
+  </div>
+</section>
+
 
 </main>
 {% endblock %}
